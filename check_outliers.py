@@ -46,7 +46,7 @@ def calc_std_dev(x, y, slope, intercept):
     return sigma, regress_line, sigma_line, dev
 
 
-def check_outliers(arrival_file='arrival.dat', out_dir='output', std_error=4):
+def check_outliers(arrival_file='arrival.dat', out_dir='output', std_error=4, plot_flag=False):
 
     ids = '__check outliers from arrival data . . .\n\n'
     if os.stat(arrival_file).st_size == 0:
@@ -78,16 +78,17 @@ def check_outliers(arrival_file='arrival.dat', out_dir='output', std_error=4):
     idx_drop = drop_rows.index.to_list()
     idx_filt = filt_rows.index.to_list()
 
-    plt.ion()
-    plt.plot(x, y, 'o', label='data')
-    plt.plot(x, x * slope + intercept, label='mean')
-    plt.plot(x, ((x * slope + intercept) + (std_error * sig)), label='(+) ' + str(std_error) + ' sigma error')
-    plt.plot(x, ((x * slope + intercept) - (std_error * sig)), label='(-) ' + str(std_error) + ' sigma error')
-    plt.legend()
-    eqs = ('y = {:.4f} + {:.4f}x'.format(intercept, slope))
-    plt.text(x.mean(), y.mean(), eqs, horizontalalignment='left', verticalalignment='bottom')
-    plt.show()
-    plt.pause(0.001)
+    if plot_flag:
+        plt.ion()
+        plt.plot(x, y, 'o', label='data')
+        plt.plot(x, x * slope + intercept, label='mean')
+        plt.plot(x, ((x * slope + intercept) + (std_error * sig)), label='(+) ' + str(std_error) + ' sigma error')
+        plt.plot(x, ((x * slope + intercept) - (std_error * sig)), label='(-) ' + str(std_error) + ' sigma error')
+        plt.legend()
+        eqs = ('y = {:.4f} + {:.4f}x'.format(intercept, slope))
+        plt.text(x.mean(), y.mean(), eqs, horizontalalignment='left', verticalalignment='bottom')
+        plt.show()
+        plt.pause(0.001)
 
     filt_data = data.drop(idx_drop)
     drop_data = data.drop(idx_filt)
