@@ -1,31 +1,14 @@
-from datetime import datetime as dt
-from textwrap import wrap
-from shutil import copy
-from matplotlib import pyplot as plt
-import subprocess as sp
-import numpy as np
-import statistics
-import shutil
 import sys
-import time
-import os
-import pickle
-
-sys.path.append('/mnt/d/project/python/pycharm/geoQ/q_modul/converter')
-sys.path.append('/mnt/d/project/python/pycharm/geoQ/q_modul')
-sys.path.append('/mnt/d/eQ/q_velest')
-sys.path.append('D:/eQ/q_velest')
-from eQ_RW import ReadNLLoc, WriteVelest
-from check_outliers import *
+# import os
 from datetime import datetime as dt
 
-# sys.path.append('D:/project/python/pycharm/geoQ/q_modul/converter')
-# from eQ_RW import isnumber
-# # from q_modul.converter.eQ_RW import isnumber
-#
-# sys.path.append('D:/project/python/pycharm/geoQ/q_modul')
-# from gmt_layout import *
+sys.path.append('/mnt/d/q_repo/q_modul')
+sys.path.append('D:/q_repo/q_modul')
+from check_outliers import *
 
+sys.path.append('/mnt/d/q_repo/q_convert')
+sys.path.append('D:/q_repo/q_convert')
+from eQ_RW import ReadNLLoc, WriteVelest
 
 """
 ===========================================
@@ -54,11 +37,11 @@ Notes:
 
 """
 
-def write_ctrl(base, x_len, y_len, z_len, mod, out_dir, out_cf, hdr_cf, sta_cor=False):
 
+def write_ctrl(base, x_len, y_len, z_len, mod, out_dir, out_cf, hdr_cf, sta_cor=False):
     # tambah opsi P_flag = True, S_flag = False,
 
-    hdr = f'{x_len+1} {y_len+1} {z_len*2+1} -{x_len/2:.1f} -{y_len/2:.1f} 0.0 1.0 1.0 0.5   PROB_DENSITY'
+    hdr = f'{x_len + 1} {y_len + 1} {z_len * 2 + 1} -{x_len / 2:.1f} -{y_len / 2:.1f} 0.0 1.0 1.0 0.5   PROB_DENSITY'
 
     hdrout = open(hdr_cf, 'w')
     hdrout.write(f'{hdr}\n')
@@ -85,7 +68,7 @@ def write_ctrl(base, x_len, y_len, z_len, mod, out_dir, out_cf, hdr_cf, sta_cor=
             if hint_vgrid in l:
                 flag_vgrid = True
             if flag_vgrid and hint_vgrid not in l:
-                l = f'VGGRID  2 {int((max(x_len,y_len)+max(x_len,y_len)/5)*10+1)} {(z_len+10)*10+1}' \
+                l = f'VGGRID  2 {int((max(x_len, y_len) + max(x_len, y_len) / 5) * 10 + 1)} {(z_len + 10) * 10 + 1}' \
                     f'  0.0 0.0 -2.0  0.1 0.1 0.1  SLOW_LEN\n'
                 flag_vgrid = False
 
@@ -126,6 +109,11 @@ def Run_NLLocSet(x_len=500, y_len=300, z_len=100):
     my_dir = os.getcwd()
     mod_dir = os.path.join('input', 'mod')
 
+    if not os.path.exists(os.path.join('input')):
+        os.makedirs('input')
+    if not os.path.exists(mod_dir):
+        os.makedirs(mod_dir)
+
     inpmod = []
     mod_nm = []
     for m in os.listdir(os.path.join(my_dir, mod_dir)):
@@ -151,6 +139,14 @@ def Run_NLLocSet(x_len=500, y_len=300, z_len=100):
         log = ' * ' + m
         print(log)
         logfile.write(log)
+
+    # Make NLLoc output folder
+    if not os.path.exists(os.path.join('loc')):
+        os.makedirs('loc')
+    if not os.path.exists(os.path.join('model')):
+            os.makedirs('model')
+    if not os.path.exists(os.path.join('time')):
+        os.makedirs('time')
 
     for mod, num, md_nm in zip(inpmod, range(len(inpmod)), mod_nm):
         if not os.path.exists(os.path.join('loc', md_nm)):
@@ -217,7 +213,7 @@ def Run_NLLocSet(x_len=500, y_len=300, z_len=100):
 
         pha_dir = os.path.join('output', md_nm)
 
-        if not os.path.exists(os.path.join(my_dir, 'output')):
+        if not os.path.exists('output'):
             os.makedirs('output')
         if not os.path.exists(pha_dir):
             os.makedirs(pha_dir)
