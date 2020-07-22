@@ -13,4 +13,4 @@ Output is input for Velest/q_velest and several gmt data for plotting using q_pl
 
 ### requirements
 * check_outliers module from q_modul
-* WriteVelest and ReadNLLoc from q_convert
+* velest_rw and nlloc_rw from q_convert

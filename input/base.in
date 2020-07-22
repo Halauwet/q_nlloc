@@ -1,0 +1,80 @@
+
+# control file q_nlloc by eQ Halauwet
+
+# input all parameter except inside ===== area 
+# which will be automaticaly write from Q_NLLoc routine
+
+
+__________________________________________________________
+
+CONTROL 1 54321
+TRANS  LAMBERT  WGS-84  -3.50 128.75 -5 -1 0.0
+MAPLINE  GMT_LONLAT ./data_geog/map.prov.line  0.0 0.0 0.0  SOLID
+__________________________________________________________
+
+VGOUT  ./model/layer
+VGTYPE P
+#VGTYPE S
+__________________________________________________________
+
+GTFILES  ./model/layer  ./time/layer P 
+#GTFILES  ./model/layer  ./time/layer S 
+GTMODE GRID2D ANGLES_YES
+INCLUDE input/station.dat
+GT_PLFD  1.0e-3  0
+__________________________________________________________
+
+LOCSIG eQ_loc - @eqhalauwet
+LOCCOM Ambon EQ's 2009-2019
+LOCHYPOUT SAVE_NLLOC_ALL  SAVE_NLLOC_SUM 
+__________________________________________________________
+
+LOCSEARCH OCT 8 8 8 0.01 100000 5000 0 1
+#LOCMETH EDT 9999.0 5 -1 -1 1.78 6 -1.0 1
+LOCMETH EDT_OT_WT 9999.0 5 -1 -1 1.78 6 -1.0 1
+__________________________________________________________
+
+#LOCDELAY BNDI P	 1  0.54
+#LOCDELAY OBMI P	 1  -0.34
+__________________________________________________________
+
+LOCGAU 0.2 0.0
+LOCGAU2 0.01 0.05 2.0 
+LOCPHASEID  P   P p Pg Pn
+LOCPHASEID  S   S s Sg Sn
+LOCQUAL2ERR 0.1 0.5 1.0 2.0 99999.9
+LOCANGLES ANGLES_YES 5
+
+LOCALIAS BANI BNDI	0 0 0	9999 99 99
+
+LOCPHSTAT 2.0 5 200.0 3.0 3.0 9999.9 -9999.9 9999.9
+#LOCPHSTAT 9999.0 -1 9999.0 3.0 3.0 9999.9 -9999.9 9999.9
+__________________________________________________________
+
+#DLOC_HYPFILE  input/nlloc.hyp  NLLOC_SUM  -1 -1
+#DLOC_SEARCH MET 500 250 20 0.005 6.0 5.0 0.10
+___________________________________________________________
+
+#LOCEXCLUDE OBMI S
+
+# (LOCTOPO_SURFACE  <GMT GRD File>  dump_flag)
+__________________________________________________________
+
+
+==============================================================================
+
+###velgrid
+VGGRID
+
+###model
+INCLUDE input model
+
+###phase
+LOCFILES
+
+###locgrid 
+LOCGRID 
+
+###corrections
+INCLUDE corrections
+==============================================================================

@@ -8,7 +8,8 @@ from check_outliers import *
 
 sys.path.append('/mnt/d/q_repo/q_convert')
 sys.path.append('D:/q_repo/q_convert')
-from eQ_RW import ReadNLLoc, WriteVelest
+from nlloc_rw import ReadNLLoc
+from velest_rw import WriteVelest
 
 """
 ===========================================
@@ -41,7 +42,8 @@ Notes:
 def write_ctrl(base, x_len, y_len, z_len, mod, out_dir, out_cf, hdr_cf, sta_cor=False):
     # tambah opsi P_flag = True, S_flag = False,
 
-    hdr = f'{x_len + 1} {y_len + 1} {z_len * 2 + 1} -{x_len / 2:.1f} -{y_len / 2:.1f} 0.0 1.0 1.0 0.5   PROB_DENSITY'
+    # hdr = f'{x_len + 1} {y_len + 1} {z_len * 2 + 1} -{x_len / 2:.1f} -{y_len / 2:.1f} 0.0 1.0 1.0 0.5   PROB_DENSITY'
+    hdr = f'{x_len + 1} {y_len + 1} {z_len * 2 + 1} -{x_len / 2:.1f} -{y_len / 2:.1f} 0.0 1.0 1.0 0.5   MISFIT'
 
     hdrout = open(hdr_cf, 'w')
     hdrout.write(f'{hdr}\n')
@@ -223,6 +225,7 @@ def Run_NLLocSet(x_len=500, y_len=300, z_len=100):
         output_arr = os.path.join(pha_dir, 'arrival.dat')
         output_cat = os.path.join(pha_dir, 'catalog.dat')
         out_log = os.path.join(pha_dir, 'log.txt')
+        out_geo = os.path.join(pha_dir, 'sts_geometry.txt')
 
         # FILTER PARAMETER
 
@@ -267,7 +270,7 @@ def Run_NLLocSet(x_len=500, y_len=300, z_len=100):
                     }
 
         WriteVelest(inp=nllocdata, filt=filt_dic, out_P=output_p, out_S=output_s, out_arr=output_arr,
-                    out_cat=output_cat, out_log=out_log, inptype='nlloc',
+                    out_cat=output_cat, out_log=out_log, out_geom=out_geo ,inptype='nlloc',
                     filt_flag=True, prob_flag=False)
 
         if os.stat(output_arr).st_size == 0:
